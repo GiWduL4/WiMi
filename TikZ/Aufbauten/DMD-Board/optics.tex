@@ -1,0 +1,196 @@
+\begin{tikzpicture}[scale = 0.124, show background rectangle]
+
+%\node[anchor=south west,inner sep=0] (image) at (0,0) {\includegraphics[width=0.8\textwidth]{110121_1431.png}};
+
+% Board Außenmaße
+\draw[style = thick] (0,0) -- (68.6,0) -- (68.6,24.5) -- (39.4,24.5) -- (39.4,44.6) -- (0,44.6) -- cycle;
+
+\draw[style = thick] (68.6+0.5,0) rectangle (68.6+0.5+54.6,39.6);
+
+% Definition global
+\tikzmath{
+\bw = 0.5;
+\w = \bw;
+\op = 0.7;
+};
+
+%Koordinaten Strahlgang A
+%%%%%%% Wesentliche Optiken
+	\coordinate (BeamstartA) at (12.5, 40.6);
+		\node at (8.4,42.6){\tiny{AK-A}};
+	\coordinate (M1a) at (5.0, 18.6);
+	\coordinate (M2a) at (26.5, 12.7);
+	\coordinate (DMDa) at (11.3, 6.0);
+		\node at (5,6){\tiny{DMD-A}};
+	\coordinate (L1a) at (51.3,6);
+		\node at (51.3,10.4){\tiny{L1-A}};
+	\coordinate (M3a) at (74.1, 6.0);
+	\coordinate (M4a) at (74.1, 13);
+	\coordinate (M5a) at (81.6, 13);
+	\coordinate (apa) at (81.6, 15.7);
+	\coordinate (L2a) at (81.6,25.7);
+		\node at (77.7,25.7){\tiny{L2-A}};
+		\node at (77.7,27.7){\tiny{$\nicefrac{\lambda}{2}$}};
+		\node at (77.7,33.7){\tiny{ÜW}};
+	\coordinate (pic) at (81.6, 35.7);	
+		
+	%%% Sonstiges
+	\coordinate (fiberend) at (18, 44.4);	
+
+\fibercollimator{BeamstartA}{M1a}{fiberend}{-130}{\w};
+%\node at (3.8,42.3){AK1};
+
+	\path (BeamstartA) + (\angB:3.2) coordinate (lam1a);
+		\node at (9, 38.5){\tiny{$\nicefrac{\lambda}{2}$}};
+\plate{lam1a}{\angB}{1.5};
+
+	\path (BeamstartA) + (\angB:12) coordinate (cube1a);
+		\node at (11.6, 27.5){\tiny{PST}};
+\cube{cube1a}{\angB-45}{2.54};
+
+
+%%%%%%%%%%%%%%%% Pickoff %%%%%%%%%%%%%%%%%%%%%%%%%%%
+	\path (BeamstartA) + (\angB:20.6) coordinate (POa);
+	\coordinate (POMa) at (12.2, 20.7);
+	\coordinate (PDa) at (9.5, 15.4);
+\pickoff{POa}{POMa}{2.54}{\w};
+	\path (POMa) + (\angOut+180:3) coordinate (POLa);
+		\node at (9.5,23.1){\tiny{L0-A}};
+\avoidcrossedbeam;
+\lens{POLa}{\angOut}{2.54}{\w};
+\avoidcrossedbeam;
+\mirror{POMa}{PDa}{2.54}{(1-3/7.5)*\w};
+\photodiode{PDa}{\angOut+180}{BeamstartA}; 
+		\node at (8.7, 13.8){\tiny{PD-A}};	
+	
+\mirror{M1a}{M2a}{2.54}{\w};
+	
+\mirror{M2a}{DMDa}{2.54}{\w};
+
+\DMD{DMDa}{M3a}{\w};
+
+
+\lens{L1a}{180}{5.08}{\w};
+%\node at (73.3,16){\small{L5}};
+
+\mirror{M3a}{M4a}{5.08}{(40-22.8)/40*\w};
+%\node at (22,25){S2};
+
+\mirror{M4a}{M5a}{5.08}{(40-29.8)/40*\w};
+
+\mirror{M5a}{pic}{5.08}{(40-37.3)/40*\w};
+%\node at (22,25){\angIn};
+
+\aperture{apa}{90}{2.54}{0.2};
+
+\lens{L2a}{90}{2.54}{1/4*\w};
+
+	\coordinate (lam2a) at (81.6, 28);
+\plate{lam2a}{90}{2.54};
+
+%%%% finish beam
+	\coordinate (cubeab) at (81.6, 33.7);
+\cube{cubeab}{45}{2.54};
+
+\draw[style = dashed, thick] (79.6,35.7) -- (83.6,35.7);
+		\node at (81.6,37.8){\small{Bildebene}};
+
+
+\path (pic) + (180:\w/8) coordinate (pic1);
+\path (pic) + (0:\w/8) coordinate (pic2);
+\fill[color = red, opacity = 0.6] (BO1) -- (BO2) -- (pic1) -- (pic2) -- cycle;
+
+\tikzmath{
+\w = \bw;
+};
+
+%Koordinaten Strahlgang B
+%%%%%%% Wesentliche Optiken
+	\coordinate (BeamstartB) at (21.3, 40.6);
+		\node at (26,41){\tiny{AK-B}};
+	\coordinate (M1b) at (16.6, 26.7);
+	\coordinate (M2b) at (32.6, 34.9);
+	\coordinate (M3b) at (36.0, 26.0);
+	\coordinate (DMDb) at (27, 21.5);
+		\node at (26,25.5){\tiny{DMD-B}};
+	\coordinate (L1b) at (67,21.5);
+		\node at (66.7,17.1){\tiny{L1-B}};
+	\coordinate (M4b) at (97.2, 21.5);
+	\coordinate (M5b) at (97.2, 33.7);
+	\coordinate (apb) at (97.2, 31.3);
+	\coordinate (L2b) at (88.6, 33.7);	
+		\node at (85.3,31){\tiny{$\nicefrac{\lambda}{2}$}};
+		\node at (89.1,31){\tiny{L2-B}};
+		
+	%%% Sonstiges
+	\coordinate (fiberendb) at (20, 44.4);
+	
+	\fibercollimator{BeamstartB}{M1b}{fiberendb}{-80}{\w};
+%\node at (3.8,42.3){AK1};
+
+	\path (BeamstartB) + (\angB:3.5) coordinate (lam1b);
+		\node at (23, 37.5){\tiny{$\nicefrac{\lambda}{2}$}};
+\plate{lam1b}{\angB}{1.5};
+
+	\path (BeamstartB) + (\angB:7.4) coordinate (cube1b);
+		\node at (22, 32.5){\tiny{PST}};
+\cube{cube1b}{\angB-45}{2.54};
+
+
+%%%%%%%%%%%%%%%% Pickoff %%%%%%%%%%%%%%%%%%%%%%%%%%%
+	\path (BeamstartB) + (\angB:11) coordinate (POb);
+	\coordinate (POMb) at (5, 36.6);
+	\coordinate (PDb) at (4.1, 32.1);
+\pickoff{POb}{POMb}{2.54}{\w};
+	\path (POMb) + (\angOut+180:10) coordinate (POLb);
+		\node at (14.2, 34.5){\tiny{L0-B}};
+\avoidcrossedbeam;
+\lens{POLb}{\angOut}{2.54}{\w};
+\avoidcrossedbeam;
+\mirror{POMb}{PDb}{2.54}{(1-10/15)*\w};
+\photodiode{PDb}{\angOut+180-10}{BeamstartB}; 
+		\node at (3.4, 30.5){\tiny{PD-B}};		
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\mirror{M1b}{M2b}{2.54}{\w};
+	
+\mirror{M2b}{M3b}{2.54}{\w};
+
+\mirror{M3b}{DMDb}{2.54}{\w};
+
+\DMD{DMDb}{M4b}{\w};
+
+\lens{L1b}{180}{5.08}{\w};
+%\node at (73.3,16){\small{L5}};
+
+\tikzmath{
+\a = (40-30.2)/40*\w;
+\b = (2.4/40)*\w;
+};
+
+\mirror{M4b}{M5b}{5.08}{\a};
+%\node at (22,25){\w};
+
+\avoidcrossedbeam;
+\mirror{M5b}{cubeab}{5.08}{\b};
+
+\aperture{apb}{90}{2.54}{0.2};
+
+\avoidcrossedbeam;
+\lens{L2b}{180}{2.54}{1/4*\w};
+
+	\path (L2b) + (180:3) coordinate (lam2b);
+\plate{lam2b}{0}{2.54};
+
+%%%%%%%%%%%%%%%% finish beam
+%
+% Strahl läuft über Cube
+\tikzmath{
+\h = \w * 1/2 * 1/4 * sqrt(2);
+};
+	\path (cubeab) + (135:\h) coordinate (C1);
+	\path (cubeab) + (-45:\h) coordinate (C2);
+\fill[color = red, opacity = 0.6] (BO2) -- (BO1) -- (C1) -- (C2) -- cycle;
+\fill[color = red, opacity = 0.6] (pic2) -- (pic1) -- (C1) -- (C2) -- cycle;
+
+\end{tikzpicture}

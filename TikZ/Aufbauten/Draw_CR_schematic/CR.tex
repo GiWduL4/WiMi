@@ -1,0 +1,82 @@
+\begin{tikzpicture}[scale = 0.3]
+
+% Definition global
+\tikzmath{
+\bw = 1.5;
+\w = \bw;
+\mop = 1;
+\op = \mop;
+\ang = 20;
+\length = 8;
+\refr = \length * tan(\ang);
+};
+
+%%%%%%% Wesentliche Optiken
+	\coordinate (Beamstart) at (4, 5);
+	\coordinate (L1) at (7,5);
+	\coordinate (leftside) at (10,5);
+	\coordinate (rightside) at (10+\length,5);
+	\coordinate (refracted) at (10+\length,5-\refr);
+	\coordinate (crystal) at (10+\length,5-0.5*\refr);
+	\coordinate (focusord) at (13+\length,5);
+	\coordinate (focusext) at (13+\length,5-\refr);
+	\coordinate (focuscenter) at (13+\length,5-0.5*\refr);
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%% Beam
+\beamstart{Beamstart}{L1}{\w};
+\beam{L1}{0}{\w};
+\beam{leftside}{0}{0.75*\w};
+\tikzmath{
+\op = 0.7*\mop;
+};
+\beam{rightside}{0}{0.25*\w};
+\beam{focusord}{0}{0};
+\beamstart{leftside}{rightside}{0.75*\w};
+\beam{refracted}{0}{0.25*\w};
+\beam{focusext}{0}{0};
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%% Ring
+\tikzmath{
+\op = \mop;
+};
+\draw[color = blue, opacity = \op, very thick] (focuscenter) ellipse (0.3 and 0.5*\refr);
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%% Optics
+\lensdraw{L1}{0}{5.08}{\w};
+\platethick{crystal}{0}{6}{\length};
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%% Description
+	\path (L1) -- + (-0.3,-4) coordinate (Ltext);
+		\node at (Ltext){$f$};
+		
+	\path (focusord) + (1.2,0) coordinate (ringu);
+	\path (focusext) + (1.2,0) coordinate (ringl);
+	\path (focusext) + (2.5,0.5*\refr) coordinate (ringc);
+	\draw[Stealth-Stealth] (ringu) -- (ringl);
+	\node at (ringc){\small{$2R_0$}};
+	
+	\path (focusext) + (-1,0.1) coordinate (waistu);
+	\path (focusext) + (-1,-0.1) coordinate (waistl);
+	\path (waistu) + (-0.8,0.4) coordinate (waisttext);
+	\draw[Stealth-] (waistu) -- + (0,1);
+	\draw[Stealth-] (waistl) -- + (0,-1);
+	\node at (waisttext){\small{$w_0$}};
+	
+	\path (leftside) -- + (0,-5.5) coordinate (leftlength);
+	\path (rightside) -- + (0,-5.5) coordinate (rightlength);
+	\path (leftlength) -- + (5, -1) coordinate (lengthtext);
+	\draw[|-|] (leftlength) -- (rightlength);
+	\node at (lengthtext){\small{$l$}};
+	
+	
+	\path (leftside) -- + (7,0) coordinate (angu);
+	\path (leftside) -- + (-\ang:7)  coordinate (angl);	
+	\draw[|-|] (angu)  arc (0:-\ang:7);	
+	\path (angu) + (-1.2,-1.1) coordinate(angtext);
+	\node at (angtext){\small{$2\alpha$}};
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\end{tikzpicture}
